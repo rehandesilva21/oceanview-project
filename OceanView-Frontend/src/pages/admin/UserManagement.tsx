@@ -9,7 +9,7 @@ import { toast } from 'sonner';
 
 interface User {
   id: number;
-  name: string; // mapped from fullName
+  name: string;
   email: string;
   role: string;
   phone?: string;
@@ -29,10 +29,10 @@ export function UserManagement() {
     email: '',
     role: 'STAFF',
     phone: '',
-    password: '' // NEW: password for new user
+    password: '' // update password
   });
 
-  // Fetch all users from backend
+  // get users
   const fetchUsers = async () => {
     try {
       const res = await fetch('/oceanview-backend/user');
@@ -64,7 +64,7 @@ export function UserManagement() {
         email: user.email,
         role: user.role,
         phone: user.phone || '',
-        password: '' // leave empty when editing
+        password: ''
       });
     } else {
       setEditingUser(null);

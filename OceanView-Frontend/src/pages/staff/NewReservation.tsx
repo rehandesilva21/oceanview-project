@@ -6,7 +6,7 @@ import { Input } from '../../components/ui/Input';
 import { toast } from 'sonner';
 import { Calendar, User, CheckCircle } from 'lucide-react';
 
-// Utility to format LKR
+// currency formatter
 const formatCurrency = (amount: number) =>
   `LKR ${amount.toLocaleString('en-LK', { minimumFractionDigits: 2 })}`;
 
@@ -14,7 +14,7 @@ interface SessionData {
   userId: number;
   fullName: string;
   email: string;
-  role: string; // "CUSTOMER" or "STAFF"
+  role: string; 
 }
 
 export function NewReservation() {
@@ -39,7 +39,7 @@ export function NewReservation() {
 
   const selectedRoom = rooms.find((r) => r.id === parseInt(formData.roomId));
 
-  // ---------------- Fetch session ----------------
+  // session management
   useEffect(() => {
     fetch('/oceanview-backend/user?action=session', { credentials: 'include' })
       .then((res) => res.json())
@@ -56,7 +56,7 @@ export function NewReservation() {
       .catch(() => toast.error('Failed to load user session'));
   }, []);
 
-  // ---------------- Fetch rooms ----------------
+  //Get rooms
   useEffect(() => {
     fetch('/oceanview-backend/room')
       .then((res) => res.json())
@@ -64,7 +64,7 @@ export function NewReservation() {
       .catch(() => toast.error('Failed to load rooms'));
   }, []);
 
-  // ---------------- Check room availability ----------------
+  // Get Room availability
   const checkAvailability = () => {
     if (!selectedRoom || !formData.checkIn || !formData.checkOut) return;
     setLoadingAvailability(true);
@@ -94,7 +94,7 @@ export function NewReservation() {
       });
   };
 
-  // ---------------- Calculate totals ----------------
+  // Calculations for review step
   const calculateNights = () => {
     if (!selectedRoom || !formData.checkIn || !formData.checkOut) return 0;
     const start = new Date(formData.checkIn);
@@ -111,7 +111,7 @@ export function NewReservation() {
   const calculateVAT = () => calculateRoomTotal() * 0.15; // 15%
   const calculateGrandTotal = () => calculateRoomTotal() + calculateServiceCharge() + calculateVAT();
 
-  // ---------------- Submit reservation ----------------
+  //reservation submission
   const handleSubmit = () => {
     if (!selectedRoom || availability === false) {
       toast.error('Cannot submit: room not available');
@@ -125,7 +125,7 @@ export function NewReservation() {
     params.append('checkOut', formData.checkOut);
     params.append('amount', String(calculateGrandTotal()));
 
-    // For CUSTOMER, guestName/email is auto-filled from session
+    //get email from user session
     params.append('guestName', formData.guestName);
     params.append('guestPhone', formData.guestPhone || '');
     params.append('guestEmail', formData.guestEmail);
@@ -152,7 +152,7 @@ export function NewReservation() {
   const nextStep = () => setStep((s) => s + 1);
   const prevStep = () => setStep((s) => s - 1);
 
-  // ---------------- Render ----------------
+  
   return (
     <div className="space-y-6 animate-fade-in max-w-4xl mx-auto">
       <div>

@@ -22,9 +22,7 @@ export function Billing() {
   const [reservation, setReservation] = useState<Reservation | null>(null);
   const [loading, setLoading] = useState(false);
 
-  // -------------------------
-  // Search Reservation
-  // -------------------------
+  // Resrvation search
   const handleSearch = async () => {
     if (!searchId.trim()) {
       toast.error('Enter Reservation ID or Guest Name');
@@ -54,18 +52,14 @@ export function Billing() {
     }
   };
 
-  // -------------------------
-  // Print Invoice
-  // -------------------------
+  //invoice printing
   const handlePrint = () => {
     if (!reservation) return;
     document.title = `Invoice-${reservation.id}`;
     window.print();
   };
 
-  // -------------------------
-  // Process Payment
-  // -------------------------
+  // payment process
   const handlePayment = async () => {
     if (!reservation) return;
     setLoading(true);
@@ -122,9 +116,7 @@ export function Billing() {
 
       {reservation && (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* ===================== */}
-          {/* INVOICE (PRINT ONLY) */}
-          {/* ===================== */}
+          
           <div className="lg:col-span-2">
             <Card
               id="invoice"
@@ -211,9 +203,7 @@ export function Billing() {
             </Card>
           </div>
 
-          {/* ================= */}
-          {/* ACTIONS SIDEBAR */}
-          {/* ================= */}
+          
           <div className="print:hidden space-y-6">
             <Card title="Actions">
               <div className="space-y-4">

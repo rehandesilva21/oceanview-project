@@ -11,16 +11,16 @@ interface Log {
   timestamp: string;
   ip_address: string | null;
   details: string | null;
-  user_name?: string; // optional, joined from users table
+  user_name?: string;
 }
 
 export function SystemLogs() {
   const [logs, setLogs] = useState<Log[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
 
-  // Fetch logs from backend
+  // Get user logs
   useEffect(() => {
-    fetch("/oceanview-backend/logs") // make sure your servlet or API supports this endpoint
+    fetch("/oceanview-backend/logs")
       .then((res) => res.json())
       .then((data) => setLogs(data.logs || []))
       .catch((err) => console.error(err));
@@ -33,7 +33,7 @@ export function SystemLogs() {
       (log.details && log.details.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
-  // CSV export
+  // download logs as CSV
   const exportCSV = (logs: Log[]) => {
     if (!logs.length) return;
     const headers = ["ID", "User", "Action", "Timestamp", "IP", "Details"];

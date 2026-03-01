@@ -11,7 +11,7 @@ import { motion } from 'framer-motion';
 export function Login() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { setUser } = useAuth(); // 🔑 Set context user
+  const { setUser } = useAuth(); // user authentication context
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -26,7 +26,7 @@ export function Login() {
       const data = await postUser('login', { email, password });
 
       if (data.status === 'success') {
-        // Build user object
+        // create user object for context and localStorage
         const user: AuthUser = {
           id: data.userId || 0,
           name: data.fullName,
@@ -34,13 +34,13 @@ export function Login() {
           role: data.role,
         };
 
-        // Save in localStorage and context
+        // session management and context update
         storeLogin(user);
-        setUser(user); // 🔑 Important for ProtectedRoute
+        setUser(user); // protected context update
 
         toast.success(`Welcome back, ${user.name}`);
 
-        // Determine redirect
+        // RBAC-based redirection logic
         const destination =
           redirectUrl ||
           (user.role === 'ADMIN'

@@ -32,9 +32,7 @@ export function AdminReports() {
     revenue: 0,
   });
 
-  // --------------------------
-  // Fetch reservations
-  // --------------------------
+  // get all reservations
   const fetchReservations = async () => {
     try {
       const res = await fetch('/oceanview-backend/reservation?action=adminAll', {
@@ -45,7 +43,7 @@ export function AdminReports() {
       if (data.status === 'success' && Array.isArray(data.reservations)) {
         setReservations(data.reservations);
 
-        // Dynamically compute stats from fetched reservations
+        // calculate stats
         const total = data.reservations.length;
         const confirmed = data.reservations.filter(
           (r: Reservation) => r.status.toUpperCase() === 'CONFIRMED'
@@ -71,9 +69,7 @@ export function AdminReports() {
     fetchReservations();
   }, []);
 
-  // --------------------------
-  // Filter reservations
-  // --------------------------
+  //search reservations
   const filteredReservations = reservations.filter(
     (r) =>
       r.guestName.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -81,9 +77,7 @@ export function AdminReports() {
       r.id.toString().includes(searchTerm)
   );
 
-  // --------------------------
-  // CSV Export
-  // --------------------------
+  // download reservations as CSV
   const exportToCSV = () => {
     if (!filteredReservations.length)
       return toast.error('No reservations to export');
@@ -118,9 +112,7 @@ export function AdminReports() {
     link.click();
   };
 
-  // --------------------------
-  // Table columns
-  // --------------------------
+
   const columns = [
     { header: 'ID', accessor: 'id' },
     { header: 'Guest Name', accessor: 'guestName' },
@@ -139,7 +131,7 @@ export function AdminReports() {
     <div className="space-y-6">
       <h1 className="text-2xl font-bold text-gray-900">Admin Reports</h1>
 
-      {/* -------------------- Stats Cards -------------------- */}
+     
       <div className="grid grid-cols-4 gap-6">
         <Card>
           <p className="text-sm text-gray-500">Total Reservations</p>
@@ -159,7 +151,7 @@ export function AdminReports() {
         </Card>
       </div>
 
-      {/* -------------------- Search & Export -------------------- */}
+      
       <div className="flex justify-between items-center">
         <Input
           placeholder="Search reservations..."
@@ -172,7 +164,7 @@ export function AdminReports() {
         </Button>
       </div>
 
-      {/* -------------------- Table -------------------- */}
+     
       <Table data={filteredReservations} columns={columns} pagination totalPages={1} />
     </div>
   );

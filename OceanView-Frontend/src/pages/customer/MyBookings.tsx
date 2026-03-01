@@ -19,9 +19,7 @@ export function MyBookings() {
   const [loading, setLoading] = useState(true);
   const [paymentMethod, setPaymentMethod] = useState<'Credit Card' | 'PayPal' | 'Cash'>('Credit Card');
 
-  // ---------------------------
-  // Fetch user's reservations
-  // ---------------------------
+  // get user reservations
   useEffect(() => {
     const fetchReservations = async () => {
       try {
@@ -47,9 +45,7 @@ export function MyBookings() {
     fetchReservations();
   }, []);
 
-  // ---------------------------
-  // Filter reservations
-  // ---------------------------
+  // reservation filter
   const filteredReservations = reservations.filter((res) => {
     const today = new Date();
     const checkIn = new Date(res.checkIn);
@@ -60,9 +56,7 @@ export function MyBookings() {
     return true;
   });
 
-  // ---------------------------
-  // Modals
-  // ---------------------------
+  // reservation details modal handler
   const handleViewDetails = (reservation: Reservation) => {
     setSelectedReservation(reservation);
     setIsDetailModalOpen(true);
@@ -73,9 +67,7 @@ export function MyBookings() {
     setIsCancelModalOpen(true);
   };
 
-  // ---------------------------
-  // Delete booking permanently
-  // ---------------------------
+  // delete reservation
   const confirmCancel = async () => {
     if (!selectedReservation) return;
 
@@ -107,9 +99,7 @@ export function MyBookings() {
     }
   };
 
-  // ---------------------------
-  // Payment flow
-  // ---------------------------
+  // Payment process
   const handlePayNow = (reservation: Reservation) => {
     setSelectedReservation(reservation);
     setPaymentMethod('Credit Card'); // default
@@ -142,7 +132,7 @@ export function MyBookings() {
           )
         );
 
-        // Beautified receipt
+        // Custom receipt generation
         const pad = (text: string, length: number) => text.padEnd(length, ' ');
         const receiptContent = `
 ╔════════════════════════════════════════╗
@@ -181,9 +171,7 @@ export function MyBookings() {
     }
   };
 
-  // ---------------------------
-  // Status Badge
-  // ---------------------------
+  // show status badge variants
   const getStatusVariant = (
     status: string
   ): 'success' | 'warning' | 'error' | 'info' | 'default' => {

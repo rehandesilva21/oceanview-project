@@ -28,10 +28,10 @@ export function RoomDetail() {
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [afterLoginBooking, setAfterLoginBooking] = useState(false);
 
-  // TODO: Replace with real session userId
+
   const userId = 1;
 
-  // ---------------- FETCH ROOM ----------------
+  // Fetch room details on component mount
   useEffect(() => {
     fetch('/oceanview-backend/room')
       .then(res => res.json())
@@ -43,12 +43,12 @@ export function RoomDetail() {
       .finally(() => setLoading(false));
   }, [id]);
 
-  // ---------------- RESET AVAILABILITY ON DATE CHANGE ----------------
+  // Rest availability status when dates change
   useEffect(() => {
     setIsAvailable(null);
   }, [checkIn, checkOut]);
 
-  // ---------------- NIGHTS ----------------
+  // night calulation
   const nights = useMemo(() => {
     if (!checkIn || !checkOut) return 0;
 
@@ -61,7 +61,7 @@ export function RoomDetail() {
     return Math.ceil(diff / (1000 * 60 * 60 * 24));
   }, [checkIn, checkOut]);
 
-  // ---------------- BILL ----------------
+  // bill calculation
   const bill = useMemo(() => {
     if (!room || nights <= 0) return null;
 
@@ -73,7 +73,7 @@ export function RoomDetail() {
     return { nights, base, serviceCharge, vat, total };
   }, [room, nights]);
 
-  // ---------------- AVAILABILITY ----------------
+  // check availability API call
   const handleCheckAvailability = async () => {
     if (!room || !checkIn || !checkOut) {
       toast.error('Please select both dates');
@@ -101,7 +101,7 @@ export function RoomDetail() {
     }
   };
 
-  // ---------------- BOOKING ----------------
+  // book reservation API call
   const handleBookNow = async () => {
     if (!room || !bill) return;
 
@@ -154,13 +154,13 @@ export function RoomDetail() {
     }
   }, [afterLoginBooking]);
 
-  // ---------------- UI STATES ----------------
+  // loader and error states
   if (loading) return <div className="p-12 text-center">Loading...</div>;
   if (!room) return <div className="p-12 text-center">Room not found</div>;
 
   const amenitiesList = room.amenities.split(',').map(a => a.trim());
 
-  // ---------------- RENDER ----------------
+  // ui render
   return (
     <div className="min-h-screen bg-gray-50 pb-12">
       {/* HERO */}

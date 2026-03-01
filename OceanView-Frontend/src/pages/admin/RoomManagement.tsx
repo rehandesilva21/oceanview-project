@@ -28,17 +28,18 @@ export function RoomManagement() {
   });
   const [newAmenity, setNewAmenity] = useState('');
 
-  // Fetch rooms from backend
+  // Get Rooms
   const fetchRooms = async () => {
     try {
       const res = await fetch('/oceanview-backend/room');
       if (!res.ok) throw new Error('Failed to fetch rooms');
       const data: Room[] = await res.json();
-      // Convert amenities string to array for frontend
+      
       const formatted = data.map(r => ({
         ...r,
         amenities: r.amenities ? r.amenities.split(',') : [],
-        capacity: r.maxGuests // for frontend consistency
+        capacity: r.capacity || r.maxGuests,
+        type: r.type || 'Standard',
       }));
       setRooms(formatted);
     } catch (err: any) {
@@ -50,13 +51,13 @@ export function RoomManagement() {
     fetchRooms();
   }, []);
 
-  // Open Add/Edit Modal
+  // add/edit room modal handler
   const handleOpenModal = (room?: Room) => {
     if (room) {
       setEditingRoom(room);
       setFormData({
         name: room.name,
-        type: room.type as any,
+        type: room.type || 'Standard',
         price: room.price,
         capacity: room.capacity || room.maxGuests,
         amenities: room.amenities || [],
@@ -81,7 +82,7 @@ export function RoomManagement() {
     setIsModalOpen(true);
   };
 
-  // Add / Remove amenity
+  //amenity removal and addition handlers
   const handleAddAmenity = () => {
     if (newAmenity.trim() && !formData.amenities.includes(newAmenity.trim())) {
       setFormData({ ...formData, amenities: [...formData.amenities, newAmenity.trim()] });
@@ -92,34 +93,37 @@ export function RoomManagement() {
     setFormData({ ...formData, amenities: formData.amenities.filter(a => a !== amenity) });
   };
 
-  // Submit Add/Edit
+  // add/edit room submission
   const handleSubmit = async () => {
-    if (!formData.name || !formData.imageUrl || formData.price <= 0) {
+    if (!formData.name.trim() || !formData.imageUrl.trim() || formData.price <= 0 || formData.capacity <= 0) {
       toast.error('Please fill in all required fields');
       return;
     }
 
     try {
       const params = new URLSearchParams();
-      params.append('name', formData.name);
+
+      
+      const roomType = formData.type?.trim() || 'Standard';
+
+      params.append('name', formData.name.trim());
       params.append('price', formData.price.toString());
       params.append('available', formData.available.toString());
       params.append('maxGuests', formData.capacity.toString());
-      params.append('imageUrl', formData.imageUrl);
-      params.append('description', formData.description);
+      params.append('type', roomType);
+      params.append('imageUrl', formData.imageUrl.trim());
+      params.append('description', formData.description?.trim() || '');
       params.append('amenities', formData.amenities.join(','));
 
       let res: Response;
       if (editingRoom) {
-        // Editing: use 'updateAvailability' action for now
-        params.append('action', 'updateAvailability');
+        params.append('action', 'update');
         params.append('id', editingRoom.id!.toString());
         res = await fetch('/oceanview-backend/room', {
           method: 'POST',
           body: params,
         });
       } else {
-        // Add new room
         params.append('action', 'add');
         res = await fetch('/oceanview-backend/room', {
           method: 'POST',
@@ -133,10 +137,10 @@ export function RoomManagement() {
         setIsModalOpen(false);
         fetchRooms();
       } else {
-        toast.error(result.message);
+        toast.error(result.message || 'Something went wrong');
       }
     } catch (err: any) {
-      toast.error(err.message);
+      toast.error(err.message || 'Failed to save room');
     }
   };
 
@@ -168,7 +172,7 @@ export function RoomManagement() {
     }
   };
 
-  // Filter rooms for search
+  // search rooms
   const filteredRooms = rooms.filter(
     r =>
       r.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -297,8 +301,8 @@ export function RoomManagement() {
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Room Type *</label>
               <select
-                value={formData.type}
-                onChange={e => setFormData({ ...formData, type: e.target.value as any })}
+                value={formData.type || 'Standard'}
+                onChange={e => setFormData({ ...formData, type: e.target.value })}
                 className="w-full h-10 rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ocean-100"
               >
                 <option value="Standard">Standard</option>

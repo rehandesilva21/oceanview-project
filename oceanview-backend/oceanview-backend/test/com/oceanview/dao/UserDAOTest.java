@@ -19,10 +19,10 @@ public class UserDAOTest {
     @Test
     public void testRegisterAndEmailExists() throws SQLException {
         User user = new User();
-        user.setFullName("Test User");
+        user.setFullName("JUnit Generated User (Default)");
         user.setEmail("testuser@example.com");
         user.setPassword("hashedpassword");
-        user.setRole("USER");
+        user.setRole("CUSTOMER");
         user.setPhone("0771234567");
 
         boolean registered = userDAO.register(user);

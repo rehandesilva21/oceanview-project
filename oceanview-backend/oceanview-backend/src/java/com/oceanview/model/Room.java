@@ -6,6 +6,7 @@ public class Room {
     private double price;
     private boolean available;
     private int maxGuests;
+    private String type; // ✅ new field
     private String imageUrl;
     private String description;
     private String amenities;
@@ -13,12 +14,13 @@ public class Room {
     public Room() {}
 
     public Room(int id, String name, double price, boolean available, int maxGuests,
-                String imageUrl, String description, String amenities) {
+                String type, String imageUrl, String description, String amenities) { // ✅ include type
         this.id = id;
         this.name = name;
         this.price = price;
         this.available = available;
         this.maxGuests = maxGuests;
+        this.type = type;
         this.imageUrl = imageUrl;
         this.description = description;
         this.amenities = amenities;
@@ -40,6 +42,9 @@ public class Room {
     public int getMaxGuests() { return maxGuests; }
     public void setMaxGuests(int maxGuests) { this.maxGuests = maxGuests; }
 
+    public String getType() { return type; } // ✅ new getter
+    public void setType(String type) { this.type = type; } // ✅ new setter
+
     public String getImageUrl() { return imageUrl; }
     public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
 
@@ -57,6 +62,7 @@ public class Room {
                 ", price=" + price +
                 ", available=" + available +
                 ", maxGuests=" + maxGuests +
+                ", type='" + type + '\'' +
                 '}';
     }
 }

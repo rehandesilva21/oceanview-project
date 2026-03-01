@@ -16,10 +16,10 @@ export function ReservationSearch() {
   const [selectedRes, setSelectedRes] = useState<Reservation | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Fetch reservations from backend
+  //get reservations
   useEffect(() => {
     fetch('/oceanview-backend/reservation?action=adminAll', {
-      credentials: 'include' // include session cookies if needed
+      credentials: 'include'
     })
       .then((res) => res.json())
       .then((data) => {
@@ -115,7 +115,7 @@ export function ReservationSearch() {
     return;
   }
 
-  // Create CSV header
+  // CSV formatting
   const headers = [
     'ID',
     'Guest Name',
@@ -127,7 +127,7 @@ export function ReservationSearch() {
     'Amount'
   ];
 
-  // Map data rows
+
   const rows = filteredReservations.map((res) => [
     res.id,
     res.guestName,
@@ -139,11 +139,11 @@ export function ReservationSearch() {
     res.amount
   ]);
 
-  // Combine header + rows
+
   const csvContent =
     [headers, ...rows].map((e) => e.join(',')).join('\n');
 
-  // Create blob and trigger download
+  // csv download
   const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');

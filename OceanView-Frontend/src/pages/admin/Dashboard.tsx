@@ -31,11 +31,9 @@ export function AdminDashboard() {
   const [reservations, setReservations] = useState<Reservation[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const totalRooms = 60; // total rooms in your hotel
+  const totalRooms = 60;
 
-  // --------------------------
-  // Fetch all reservations
-  // --------------------------
+  // Fetch reservations
   const fetchReservations = useCallback(async () => {
     try {
       const res = await fetch('/oceanview-backend/reservation?action=adminAll', {
@@ -61,16 +59,12 @@ export function AdminDashboard() {
     fetchReservations();
   }, [fetchReservations]);
 
-  // --------------------------
-  // Remove a reservation locally (after deletion)
-  // --------------------------
+  // remove reservation
   const removeReservation = (id: number) => {
     setReservations((prev) => prev.filter((r) => r.id !== id));
   };
 
-  // --------------------------
-  // Stats Calculations
-  // --------------------------
+  //stats calculations
   const confirmedBookings = reservations.filter(
     (r) => r.status.toUpperCase() === 'CONFIRMED'
   ).length;
@@ -89,9 +83,7 @@ export function AdminDashboard() {
 
   const totalGuests = reservations.length;
 
-  // --------------------------
-  // Revenue Chart Data
-  // --------------------------
+  //Chart data
   const revenueByDate: { [key: string]: number } = {};
   reservations.forEach((r) => {
     if (!r.checkIn) return;
@@ -103,9 +95,7 @@ export function AdminDashboard() {
     .map(([date, rev]) => ({ name: date, revenue: rev }))
     .sort((a, b) => (a.name > b.name ? 1 : -1));
 
-  // --------------------------
-  // Recent Activity
-  // --------------------------
+  //Recent activity (latest 5 reservations)
   const recentActivity = [...reservations]
     .sort((a, b) => new Date(b.checkIn).getTime() - new Date(a.checkIn).getTime())
     .slice(0, 5);
@@ -119,7 +109,7 @@ export function AdminDashboard() {
         <p className="text-gray-500">Welcome back, here's what's happening today.</p>
       </div>
 
-      {/* -------------------- Stats Cards -------------------- */}
+     
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <StatCard
           title="Total Revenue"
@@ -158,7 +148,7 @@ export function AdminDashboard() {
         />
       </div>
 
-      {/* -------------------- Charts & Recent Activity -------------------- */}
+      
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <Card className="lg:col-span-2" title="Revenue Overview">
           <div className="h-80 w-full">

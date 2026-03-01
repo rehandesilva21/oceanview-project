@@ -10,7 +10,7 @@ import { motion } from 'framer-motion';
 
 export function Register() {
   const navigate = useNavigate();
-  const { setUser } = useAuth(); // 🔑 Important for context
+  const { setUser } = useAuth(); // user authentication context
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
@@ -19,7 +19,7 @@ export function Register() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  const redirectUrl = getRedirectUrl(); // check if user was redirected from a protected page
+  const redirectUrl = getRedirectUrl(); // checking if user was redirected here from a protected route
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -32,7 +32,7 @@ export function Register() {
     setIsLoading(true);
 
     try {
-      // Register the user
+      // user registration API call
       const data = await postUser('register', {
         fullName: `${firstName} ${lastName}`,
         email,
@@ -44,7 +44,7 @@ export function Register() {
       if (data.status === 'success') {
         toast.success('Registration successful! Logging you in...');
 
-        // Auto-login
+        // auto login after successful registration
         const loginData = await postUser('login', { email, password });
         if (loginData.status === 'success') {
           const user: AuthUser = {
@@ -54,11 +54,11 @@ export function Register() {
             role: loginData.role,
           };
 
-          // Save user in localStorage and context
+          // session management and context update
           storeLogin(user);
-          setUser(user); // 🔑 Updates AuthContext
+          setUser(user); // authcontext update
 
-          // Determine redirect
+          // RBAC-based redirection logic
           const destination =
             redirectUrl ||
             (user.role === 'ADMIN'

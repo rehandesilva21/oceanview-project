@@ -32,7 +32,7 @@ export function ReservationManagement() {
 
   const [editStatus, setEditStatus] = useState('');
 
-  // ---------------- Fetch Reservations ----------------
+  // get reservation
   const fetchReservations = async () => {
     try {
       const res = await fetch('/oceanview-backend/reservation?action=adminAll', {
@@ -54,7 +54,7 @@ export function ReservationManagement() {
     fetchReservations();
   }, []);
 
-  // ---------------- Actions ----------------
+  // reservation actions
   const handleViewDetails = (res: Reservation) => {
     setSelectedRes(res);
     setIsDetailModalOpen(true);
@@ -130,7 +130,7 @@ export function ReservationManagement() {
     }
   };
 
-  // ---------------- Filtering ----------------
+  // search reservations
   const filteredReservations = reservations.filter(
     (r) =>
       r.guestName.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -138,7 +138,7 @@ export function ReservationManagement() {
       r.id.toString().includes(searchTerm)
   );
 
-  // ---------------- Table Columns ----------------
+  
   const columns = [
     { header: 'ID', accessor: (r: Reservation) => <span className="font-mono text-xs">{r.id}</span> },
     { header: 'Guest', accessor: (r: Reservation) => <span>{r.guestName}</span> },

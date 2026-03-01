@@ -14,13 +14,13 @@ export function RoomSearch() {
   const [filteredRooms, setFilteredRooms] = useState<Room[]>([]);
   const [filtersOpen, setFiltersOpen] = useState(false);
 
-  // Filter States
+  // user state for filters
   const [priceRange, setPriceRange] = useState(200000);
   const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
   const [checkIn, setCheckIn] = useState('');
   const [checkOut, setCheckOut] = useState('');
 
-  // Fetch rooms from backend
+  // Call API to fetch all rooms on component mount
   useEffect(() => {
     fetch('/oceanview-backend/room')
       .then((res) => res.json())
@@ -31,14 +31,14 @@ export function RoomSearch() {
       .catch((err) => toast.error('Failed to fetch rooms: ' + err.message));
   }, []);
 
-  // Apply filters
+  // price and type filters effect
   useEffect(() => {
     let result = rooms;
 
-    // Filter by Price
+    // price filter
     result = result.filter((room) => room.price <= priceRange);
 
-    // Filter by Type
+    // type filter
     if (selectedTypes.length > 0) {
       result = result.filter((room) => selectedTypes.includes(room.type));
     }
@@ -46,12 +46,14 @@ export function RoomSearch() {
     setFilteredRooms(result);
   }, [priceRange, selectedTypes, rooms]);
 
+  //checkbox handler for room types
   const handleTypeChange = (type: string) => {
     setSelectedTypes((prev) =>
       prev.includes(type) ? prev.filter((t) => t !== type) : [...prev, type]
     );
   };
 
+  // Availability check API call
   const handleCheckAvailability = async () => {
     if (!checkIn || !checkOut) {
       toast.error('Please select check-in and check-out dates');
@@ -61,23 +63,40 @@ export function RoomSearch() {
     try {
       const availabilityPromises = rooms.map(async (room) => {
         const res = await fetch(
-          `/oceanview-backend/room/checkAvailability?roomName=${encodeURIComponent(
-            room.name
-          )}&checkIn=${checkIn}&checkOut=${checkOut}`
+          `/oceanview-backend/room/checkAvailability?roomId=${room.id}&checkIn=${checkIn}&checkOut=${checkOut}`
         );
         const data = await res.json();
         return { ...room, available: data.available };
       });
 
       const updatedRooms = await Promise.all(availabilityPromises);
-      setFilteredRooms(updatedRooms.filter((r) => r.available));
+
+      // filter rooms based on availability and existing filters
+      const finalRooms = updatedRooms.filter(
+        (r) =>
+          r.available &&
+          r.price <= priceRange &&
+          (selectedTypes.length === 0 || selectedTypes.includes(r.type))
+      );
+
+      setFilteredRooms(finalRooms);
     } catch (err: any) {
       toast.error('Error checking availability: ' + err.message);
     }
   };
 
+  // Navigation to room details page
   const handleViewDetails = (room: Room) => {
     navigate(`/customer/rooms/${room.id}`);
+  };
+
+  // Reset filters to default values
+  const resetFilters = () => {
+    setPriceRange(200000);
+    setSelectedTypes([]);
+    setCheckIn('');
+    setCheckOut('');
+    setFilteredRooms(rooms);
   };
 
   return (
@@ -101,14 +120,12 @@ export function RoomSearch() {
               value={checkIn}
               onChange={(e) => setCheckIn(e.target.value)}
             />
-
             <Input
               label="Check Out"
               type="date"
               value={checkOut}
               onChange={(e) => setCheckOut(e.target.value)}
             />
-
             <Select
               label="Guests"
               options={[
@@ -118,7 +135,6 @@ export function RoomSearch() {
                 { value: '4', label: '4+ Guests' },
               ]}
             />
-
             <Button
               className="h-10"
               leftIcon={<Search className="h-4 w-4" />}
@@ -139,20 +155,13 @@ export function RoomSearch() {
             <div className="bg-white p-6 rounded-xl border border-gray-200 sticky top-24">
               <div className="flex items-center justify-between mb-6">
                 <h3 className="font-serif font-bold text-lg">Filters</h3>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="text-xs"
-                  onClick={() => {
-                    setPriceRange(200000);
-                    setSelectedTypes([]);
-                  }}
-                >
+                <Button variant="ghost" size="sm" className="text-xs" onClick={resetFilters}>
                   Reset
                 </Button>
               </div>
 
               <div className="space-y-6">
+                {/* Price Range */}
                 <div>
                   <label className="text-sm font-medium text-gray-900 mb-3 block">
                     Max Price (LKR)
@@ -160,9 +169,9 @@ export function RoomSearch() {
                   <input
                     type="range"
                     className="w-full accent-ocean-DEFAULT"
-                    min="10000"
-                    max="200000"
-                    step="5000"
+                    min={10000}
+                    max={200000}
+                    step={5000}
                     value={priceRange}
                     onChange={(e) => setPriceRange(Number(e.target.value))}
                   />
@@ -172,6 +181,7 @@ export function RoomSearch() {
                   </div>
                 </div>
 
+                {/* Room Type */}
                 <div>
                   <label className="text-sm font-medium text-gray-900 mb-3 block">
                     Room Type
@@ -225,13 +235,7 @@ export function RoomSearch() {
             ) : (
               <div className="text-center py-12 bg-white rounded-xl border border-gray-100">
                 <p className="text-gray-500">No rooms match your criteria.</p>
-                <Button
-                  variant="ghost"
-                  onClick={() => {
-                    setPriceRange(200000);
-                    setSelectedTypes([]);
-                  }}
-                >
+                <Button variant="ghost" onClick={resetFilters}>
                   Clear Filters
                 </Button>
               </div>

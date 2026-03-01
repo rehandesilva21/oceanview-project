@@ -23,7 +23,7 @@ export function StaffDashboard() {
   const [quickSearch, setQuickSearch] = useState('');
   const [reservations, setReservations] = useState<Reservation[]>([]);
 
-  // ---------------- Fetch reservations from backend ----------------
+  // get reservations
   const fetchReservations = async () => {
     try {
       const res = await fetch('/oceanview-backend/reservation?action=adminAll');
@@ -43,7 +43,7 @@ export function StaffDashboard() {
     fetchReservations();
   }, []);
 
-  // ---------------- Quick Search ----------------
+  // search reservation by ID or guest name
   const handleQuickSearch = () => {
     if (!quickSearch.trim()) return;
 
@@ -61,7 +61,7 @@ export function StaffDashboard() {
     }
   };
 
-  // ---------------- Today's Check-ins ----------------
+  // check-ins for today (show top 3)
   const todayCheckIns = reservations
     .filter((r) => r.status === 'CONFIRMED')
     .slice(0, 3);
