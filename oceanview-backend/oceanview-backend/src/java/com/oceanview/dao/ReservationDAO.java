@@ -16,7 +16,7 @@ public class ReservationDAO {
         return DriverManager.getConnection(jdbcURL, jdbcUsername, jdbcPassword);
     }
 
-    // ------------------ ROOM AVAILABILITY ------------------
+    // Check Availabilty
     public boolean isRoomAvailable(int roomId, Date checkIn, Date checkOut) throws SQLException {
         String sql =
             "SELECT COUNT(*) FROM reservations WHERE room_id = ? " +
@@ -46,7 +46,7 @@ public class ReservationDAO {
 
             ps.setInt(1, r.getUserId());
             ps.setString(2, r.getGuestName());
-            ps.setString(3, r.getGuestEmail()); // ✅ store email
+            ps.setString(3, r.getGuestEmail());
             ps.setInt(4, r.getRoomId());
             ps.setString(5, r.getRoomName());
             ps.setDate(6, new java.sql.Date(r.getCheckIn().getTime()));
@@ -59,7 +59,7 @@ public class ReservationDAO {
         }
     }
 
-    // ------------------ GET RESERVATIONS BY USER ------------------
+    // get reservations
     public List<Reservation> getReservationsByUserId(int userId) throws SQLException {
         String sql = "SELECT * FROM reservations WHERE user_id = ? ORDER BY id DESC";
         List<Reservation> list = new ArrayList<>();
@@ -76,7 +76,7 @@ public class ReservationDAO {
         return list;
     }
 
-    // ------------------ ADMIN: ALL RESERVATIONS ------------------
+    // get all reservations:ADMIN
     public List<Reservation> getAllReservations() throws SQLException {
         String sql = "SELECT * FROM reservations ORDER BY id DESC";
         List<Reservation> list = new ArrayList<>();
@@ -91,7 +91,7 @@ public class ReservationDAO {
         return list;
     }
 
-    // ------------------ GET RESERVATION BY ID ------------------
+    //get reservation by id
     public Reservation getReservationById(int id) throws SQLException {
         String sql = "SELECT * FROM reservations WHERE id = ?";
         try (Connection conn = getConnection();
@@ -129,7 +129,7 @@ public class ReservationDAO {
         }
     }
 
-    // ------------------ MARK AS PAID ------------------
+    // payment process
     public boolean markAsPaid(int reservationId) throws SQLException {
         String sql = "UPDATE reservations SET paid = TRUE WHERE id = ?";
         try (Connection conn = getConnection();
@@ -139,7 +139,7 @@ public class ReservationDAO {
         }
     }
 
-    // ------------------ DELETE RESERVATION ------------------
+    // delete
     public boolean deleteReservation(int reservationId) throws SQLException {
         String sql = "DELETE FROM reservations WHERE id = ?";
         try (Connection conn = getConnection();
@@ -150,7 +150,7 @@ public class ReservationDAO {
         }
     }
 
-    // ------------------ DASHBOARD STATS ------------------
+    // dashboard
     public int getTotalReservations() throws SQLException {
         return getCount("SELECT COUNT(*) FROM reservations");
     }
@@ -199,7 +199,7 @@ public class ReservationDAO {
         r.setId(rs.getInt("id"));
         r.setUserId(rs.getInt("user_id"));
         r.setGuestName(rs.getString("guest_name"));
-        r.setGuestEmail(rs.getString("guest_email")); // ✅ now included
+        r.setGuestEmail(rs.getString("guest_email"));
         r.setRoomId(rs.getInt("room_id"));
         r.setRoomName(rs.getString("room_name"));
         r.setCheckIn(rs.getDate("check_in"));

@@ -6,7 +6,7 @@ public class Room {
     private double price;
     private boolean available;
     private int maxGuests;
-    private String type; // ✅ new field
+    private String type;
     private String imageUrl;
     private String description;
     private String amenities;
@@ -26,7 +26,7 @@ public class Room {
         this.amenities = amenities;
     }
 
-    // Getters & Setters
+   
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
 

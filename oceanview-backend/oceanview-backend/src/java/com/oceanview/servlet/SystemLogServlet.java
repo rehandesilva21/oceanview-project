@@ -39,7 +39,7 @@ public class SystemLogServlet extends HttpServlet {
         }
 
         try {
-            // Optional filters
+            
             String startDateStr = request.getParameter("startDate");
             String endDateStr = request.getParameter("endDate");
             String userIdStr = request.getParameter("userId");

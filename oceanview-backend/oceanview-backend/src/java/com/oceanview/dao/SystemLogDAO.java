@@ -17,7 +17,7 @@ public class SystemLogDAO {
         return DriverManager.getConnection(jdbcURL, dbUser, dbPassword);
     }
 
-    // Fetch logs with optional filters
+    // logs fetching
     public List<SystemLog> getLogs(Date startDate, Date endDate, Integer userId, String actionType) throws SQLException {
         List<SystemLog> logs = new ArrayList<>();
 
@@ -66,7 +66,7 @@ public class SystemLogDAO {
         return logs;
     }
 
-    // Optional: add a log entry
+    // log entry
     public void addLog(int userId, String action, String details, String ipAddress) throws SQLException {
         String sql = "INSERT INTO system_logs (user_id, action, details, timestamp, ip_address) VALUES (?, ?, ?, NOW(), ?)";
         try (Connection conn = getConnection();

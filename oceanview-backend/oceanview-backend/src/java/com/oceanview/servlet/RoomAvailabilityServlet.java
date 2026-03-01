@@ -27,7 +27,7 @@ public class RoomAvailabilityServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
 
         try {
-            int roomId = Integer.parseInt(request.getParameter("roomId"));  // ✅ now int
+            int roomId = Integer.parseInt(request.getParameter("roomId"));
             String checkInStr = request.getParameter("checkIn");
             String checkOutStr = request.getParameter("checkOut");
 
@@ -35,7 +35,7 @@ public class RoomAvailabilityServlet extends HttpServlet {
             Date checkIn = sdf.parse(checkInStr);
             Date checkOut = sdf.parse(checkOutStr);
 
-            boolean available = reservationDAO.isRoomAvailable(roomId, checkIn, checkOut); // ✅ DAO must take roomId now
+            boolean available = reservationDAO.isRoomAvailable(roomId, checkIn, checkOut);
             out.println("{\"available\":" + available + "}");
 
         } catch (Exception e) {

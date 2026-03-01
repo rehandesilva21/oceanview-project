@@ -9,7 +9,7 @@ import java.util.List;
 
 public class RoomDAO {
 
-    // Get all rooms
+    // get rooms
     public List<Room> getAllRooms() throws SQLException {
         List<Room> rooms = new ArrayList<>();
         String sql = "SELECT * FROM rooms";
@@ -36,7 +36,7 @@ public class RoomDAO {
         return rooms;
     }
 
-    // Get room by ID
+    // get rooms by id
     public Room getRoomById(int id) throws SQLException {
         String sql = "SELECT * FROM rooms WHERE id = ?";
         try (Connection conn = DBConnection.getInstance().getConnection();
@@ -62,7 +62,7 @@ public class RoomDAO {
         return null;
     }
 
-    // Add new room
+    // add rooms
     public boolean addRoom(Room room) throws SQLException {
         String sql = "INSERT INTO rooms (name, price, available, max_guests, type, image_url, description, amenities) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = DBConnection.getInstance().getConnection();
@@ -81,7 +81,7 @@ public class RoomDAO {
         }
     }
 
-    // Update availability
+    // update rooms
     public boolean updateRoomAvailability(int roomId, boolean available) throws SQLException {
         String sql = "UPDATE rooms SET available = ? WHERE id = ?";
         try (Connection conn = DBConnection.getInstance().getConnection();
@@ -92,7 +92,7 @@ public class RoomDAO {
         }
     }
 
-    // Delete room
+    // delete rooms
     public boolean deleteRoom(int roomId) throws SQLException {
         String sql = "DELETE FROM rooms WHERE id = ?";
         try (Connection conn = DBConnection.getInstance().getConnection();
@@ -102,7 +102,7 @@ public class RoomDAO {
         }
     }
 
-    // Update room (optional, if you need full CRUD)
+    // update rooms with full crud operations
     public boolean updateRoom(Room room) throws SQLException {
         String sql = "UPDATE rooms SET name=?, price=?, available=?, max_guests=?, type=?, image_url=?, description=?, amenities=? WHERE id=?";
         try (Connection conn = DBConnection.getInstance().getConnection();
@@ -112,7 +112,7 @@ public class RoomDAO {
             stmt.setDouble(2, room.getPrice());
             stmt.setBoolean(3, room.isAvailable());
             stmt.setInt(4, room.getMaxGuests());
-            stmt.setString(5, room.getType()); // ✅ new field
+            stmt.setString(5, room.getType());
             stmt.setString(6, room.getImageUrl());
             stmt.setString(7, room.getDescription());
             stmt.setString(8, room.getAmenities());

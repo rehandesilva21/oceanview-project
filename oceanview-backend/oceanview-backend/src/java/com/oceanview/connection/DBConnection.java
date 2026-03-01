@@ -10,8 +10,8 @@ public class DBConnection {
     private Connection connection;
 
     private String url = "jdbc:mysql://localhost:3306/oceanview?useSSL=false&serverTimezone=UTC";
-    private String username = "root"; // your DB username
-    private String password = "";     // your DB password
+    private String username = "root"; 
+    private String password = "";    
 
     private DBConnection() throws SQLException {
         try {

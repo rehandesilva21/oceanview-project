@@ -10,7 +10,7 @@ public class SystemLog {
     private Date timestamp;
     private String ipAddress;
 
-    // Getters and Setters
+    
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
 

@@ -90,7 +90,7 @@ public class RoomServlet extends HttpServlet {
                 room.setPrice(Double.parseDouble(request.getParameter("price")));
                 room.setAvailable(Boolean.parseBoolean(request.getParameter("available")));
                 room.setMaxGuests(Integer.parseInt(request.getParameter("maxGuests")));
-                room.setType(request.getParameter("type")); // ✅ new field
+                room.setType(request.getParameter("type"));
                 room.setImageUrl(request.getParameter("imageUrl"));
                 room.setDescription(request.getParameter("description"));
                 room.setAmenities(request.getParameter("amenities"));
@@ -109,14 +109,14 @@ public class RoomServlet extends HttpServlet {
                 boolean success = roomDAO.updateRoomAvailability(roomId, available);
                 if (success) out.println("{\"status\":\"success\",\"message\":\"Availability updated\"}");
                 else out.println("{\"status\":\"error\",\"message\":\"Failed to update availability\"}");
-            } else if ("update".equalsIgnoreCase(action)) { // ✅ optional full update
+            } else if ("update".equalsIgnoreCase(action)) { 
                 Room room = new Room();
                 room.setId(Integer.parseInt(request.getParameter("id")));
                 room.setName(request.getParameter("name"));
                 room.setPrice(Double.parseDouble(request.getParameter("price")));
                 room.setAvailable(Boolean.parseBoolean(request.getParameter("available")));
                 room.setMaxGuests(Integer.parseInt(request.getParameter("maxGuests")));
-                room.setType(request.getParameter("type")); // ✅ new field
+                room.setType(request.getParameter("type")); 
                 room.setImageUrl(request.getParameter("imageUrl"));
                 room.setDescription(request.getParameter("description"));
                 room.setAmenities(request.getParameter("amenities"));
