@@ -21,10 +21,10 @@ public class ReservationDAOTest {
         reservationDAO = new ReservationDAO();
 
         testReservation = new Reservation();
-        testReservation.setUserId(1); // make sure user_id 1 exists
+        testReservation.setUserId(1); 
         testReservation.setGuestName("JUnit Test Guest");
         testReservation.setGuestEmail("junit@test.com");
-        testReservation.setRoomId(1); // make sure room_id 1 exists
+        testReservation.setRoomId(1);
         testReservation.setRoomName("Deluxe Room");
         testReservation.setCheckIn(new Date());
         testReservation.setCheckOut(new Date(System.currentTimeMillis() + 86400000));

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite errors="0" failures="0" hostname="Rehans-MacBook-Air.local" name="com.oceanview.dao.UserDAOTest" skipped="0" tests="3" time="0.258" timestamp="2026-03-02T02:21:52">
+<testsuite errors="0" failures="0" hostname="Rehans-MacBook-Air.local" name="com.oceanview.dao.RoomDAOTest" skipped="0" tests="6" time="0.321" timestamp="2026-03-02T02:21:52">
   <properties>
     <property name="javac.test.classpath" value="/Users/rehandesilva/mysql-connector-j-9.6.0/mysql-connector-j-9.6.0.jar::build/web/WEB-INF/classes:/Users/rehandesilva/hamcrest-core-1.3.jar:/Users/rehandesilva/junit-4.13.2.jar" />
     <property name="java.specification.version" value="25" />
@@ -17,7 +17,7 @@
     <property name="libs.JWSAntTasks.javadoc" value="" />
     <property name="do.war.package.with.custom.manifest" value="true" />
     <property name="sun.boot.library.path" value="/Applications/Apache NetBeans.app/Contents/Home/lib" />
-    <property name="sun.java.command" value="org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner com.oceanview.dao.UserDAOTest skipNonTests=false filtertrace=true haltOnError=false haltOnFailure=false showoutput=true outputtoformatters=true logfailedtests=true threadid=0 logtestlistenerevents=true formatter=org.apache.tools.ant.taskdefs.optional.junit.BriefJUnitResultFormatter formatter=org.apache.tools.ant.taskdefs.optional.junit.XMLJUnitResultFormatter,/Volumes/AS1000 Plus/OceanView_Project/oceanview-backend/oceanview-backend/build/test/results/TEST-com.oceanview.dao.UserDAOTest.xml crashfile=/Volumes/AS1000 Plus/OceanView_Project/oceanview-backend/oceanview-backend/build/junitvmwatcher8051305926182470117.properties propsfile=/Volumes/AS1000 Plus/OceanView_Project/oceanview-backend/oceanview-backend/build/junit11234678080624590586.properties" />
+    <property name="sun.java.command" value="org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner com.oceanview.dao.RoomDAOTest skipNonTests=false filtertrace=true haltOnError=false haltOnFailure=false showoutput=true outputtoformatters=true logfailedtests=true threadid=0 logtestlistenerevents=true formatter=org.apache.tools.ant.taskdefs.optional.junit.BriefJUnitResultFormatter formatter=org.apache.tools.ant.taskdefs.optional.junit.XMLJUnitResultFormatter,/Volumes/AS1000 Plus/OceanView_Project/oceanview-backend/oceanview-backend/build/test/results/TEST-com.oceanview.dao.RoomDAOTest.xml crashfile=/Volumes/AS1000 Plus/OceanView_Project/oceanview-backend/oceanview-backend/build/junitvmwatcher8083275915876243313.properties propsfile=/Volumes/AS1000 Plus/OceanView_Project/oceanview-backend/oceanview-backend/build/junit2713116313339223941.properties" />
     <property name="jdk.debug" value="release" />
     <property name="j2ee.platform.embeddableejb.classpath" value="" />
     <property name="javadoc.use" value="true" />
@@ -407,9 +407,12 @@
     <property name="libs.jsp-compiler.classpath" value="/Applications/Apache NetBeans.app/Contents/Resources/netbeans/enterprise/ant/extra/jspcompile.jar" />
     <property name="libs.javaee-endorsed-api-6.0.classpath" value="/Applications/Apache NetBeans.app/Contents/Resources/netbeans/enterprise/modules/ext/javaee6-endorsed/javax.annotation.jar:/Applications/Apache NetBeans.app/Contents/Resources/netbeans/enterprise/modules/ext/javaee6-endorsed/jaxb-api-osgi.jar:/Applications/Apache NetBeans.app/Contents/Resources/netbeans/enterprise/modules/ext/javaee6-endorsed/webservices-api-osgi.jar" />
   </properties>
-  <testcase classname="com.oceanview.dao.UserDAOTest" name="testGetAllUsers" time="0.18" />
-  <testcase classname="com.oceanview.dao.UserDAOTest" name="testRegisterAndEmailExists" time="0.012" />
-  <testcase classname="com.oceanview.dao.UserDAOTest" name="testLoginFailure" time="0.005" />
+  <testcase classname="com.oceanview.dao.RoomDAOTest" name="testUpdateRoomAvailability" time="0.191" />
+  <testcase classname="com.oceanview.dao.RoomDAOTest" name="testAddRoom" time="0.012" />
+  <testcase classname="com.oceanview.dao.RoomDAOTest" name="testGetAllRooms" time="0.016" />
+  <testcase classname="com.oceanview.dao.RoomDAOTest" name="testUpdateRoomFull" time="0.018" />
+  <testcase classname="com.oceanview.dao.RoomDAOTest" name="testDeleteRoom" time="0.011" />
+  <testcase classname="com.oceanview.dao.RoomDAOTest" name="testGetRoomById" time="0.011" />
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>
