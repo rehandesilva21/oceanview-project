@@ -75,9 +75,13 @@ export function AdminDashboard() {
 
   const activeBookings = confirmedBookings + pendingBookings;
 
-  const revenue = reservations
-    .filter((r) => r.status.toUpperCase() === 'CHECKED_OUT' && r.paid)
-    .reduce((sum, r) => sum + (r.amount || 0), 0);
+const revenue = reservations
+  .filter(
+    (r) =>
+      ['CHECKED_OUT', 'CHECKED_IN', 'CONFIRMED'].includes(r.status.toUpperCase()) &&
+      r.paid
+  )
+  .reduce((sum, r) => sum + (r.amount || 0), 0);
 
   const occupancyRate = totalRooms > 0 ? Math.round((activeBookings / totalRooms) * 100) : 0;
 

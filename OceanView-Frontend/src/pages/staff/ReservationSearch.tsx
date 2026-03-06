@@ -16,7 +16,7 @@ export function ReservationSearch() {
   const [selectedRes, setSelectedRes] = useState<Reservation | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  //get reservations
+  // get reservations
   useEffect(() => {
     fetch('/oceanview-backend/reservation?action=adminAll', {
       credentials: 'include'
@@ -109,51 +109,52 @@ export function ReservationSearch() {
       )
     }
   ];
+
   const exportToCSV = () => {
-  if (!filteredReservations.length) {
-    toast.error('No reservations to export');
-    return;
-  }
+    if (!filteredReservations.length) {
+      toast.error('No reservations to export');
+      return;
+    }
 
-  // CSV formatting
-  const headers = [
-    'ID',
-    'Guest Name',
-    'Guest Email',
-    'Room Name',
-    'Check In',
-    'Check Out',
-    'Status',
-    'Amount'
-  ];
+    // CSV formatting
+    const headers = [
+      'ID',
+      'Guest Name',
+      'Guest Email',
+      'Room Name',
+      'Check In',
+      'Check Out',
+      'Status',
+      'Amount',
+      'Paid'
+    ];
 
+    const rows = filteredReservations.map((res) => [
+      res.id,
+      res.guestName,
+      res.guestEmail,
+      res.roomName,
+      res.checkIn,
+      res.checkOut,
+      res.status,
+      res.amount,
+      res.paid ? 'Paid' : 'Not Paid'
+    ]);
 
-  const rows = filteredReservations.map((res) => [
-    res.id,
-    res.guestName,
-    res.guestEmail,
-    res.roomName,
-    res.checkIn,
-    res.checkOut,
-    res.status,
-    res.amount
-  ]);
+    const csvContent =
+      [headers, ...rows].map((e) => e.join(',')).join('\n');
 
-
-  const csvContent =
-    [headers, ...rows].map((e) => e.join(',')).join('\n');
-
-  // csv download
-  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement('a');
-  link.setAttribute('href', url);
-  link.setAttribute('download', `reservations_${new Date().toISOString()}.csv`);
-  link.style.visibility = 'hidden';
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-};
+    // csv download
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.setAttribute('href', url);
+    link.setAttribute('download', `reservations_${new Date().toISOString()}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
   return (
     <div className="space-y-6 animate-fade-in">
@@ -165,12 +166,12 @@ export function ReservationSearch() {
           <p className="text-gray-500">Find and view booking details.</p>
         </div>
         <Button
-  variant="outline"
-  leftIcon={<Download className="h-4 w-4" />}
-  onClick={exportToCSV}
->
-  Export CSV
-</Button>
+          variant="outline"
+          leftIcon={<Download className="h-4 w-4" />}
+          onClick={exportToCSV}
+        >
+          Export CSV
+        </Button>
       </div>
 
       <div className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm flex gap-4">
@@ -223,6 +224,12 @@ export function ReservationSearch() {
                 <p className="text-sm text-gray-500">Check Out</p>
                 <p className="font-medium">{selectedRes.checkOut}</p>
               </div>
+              <div>
+                <p className="text-sm text-gray-500">Payment Status</p>
+                <p className={`font-medium ${selectedRes.paid ? 'text-green-600' : 'text-red-600'}`}>
+                  {selectedRes.paid ? 'Paid ✅' : 'Not Paid ❌'}
+                </p>
+              </div>
             </div>
             <div className="pt-4 border-t border-gray-100">
               <p className="text-sm text-gray-500">Total Amount</p>
@@ -234,5 +241,5 @@ export function ReservationSearch() {
         )}
       </Modal>
     </div>
-  );
+  ); 
 }

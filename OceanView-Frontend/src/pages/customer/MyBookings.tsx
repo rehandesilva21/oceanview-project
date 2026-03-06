@@ -115,7 +115,7 @@ export function MyBookings() {
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: new URLSearchParams({
           action: 'pay',
-          id: String(selectedReservation.id),
+          reservationId: String(selectedReservation.id),
           method: paymentMethod,
         }),
         credentials: 'include',

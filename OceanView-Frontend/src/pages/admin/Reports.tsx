@@ -52,8 +52,12 @@ export function AdminReports() {
           (r: Reservation) => r.status.toUpperCase() === 'PENDING'
         ).length;
         const revenue = data.reservations
-          .filter((r: Reservation) => r.status.toUpperCase() === 'CHECKED_OUT' && r.paid)
-          .reduce((sum: number, r: Reservation) => sum + (r.amount || 0), 0);
+          .filter(
+    (r) =>
+      ['CHECKED_OUT', 'CHECKED_IN', 'CONFIRMED'].includes(r.status.toUpperCase()) &&
+      r.paid
+  )
+  .reduce((sum, r) => sum + (r.amount || 0), 0);
 
         setStats({ total, confirmed, pending, revenue });
       } else {

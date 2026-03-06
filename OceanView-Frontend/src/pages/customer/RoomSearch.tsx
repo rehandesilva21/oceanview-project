@@ -12,15 +12,15 @@ export function RoomSearch() {
   const navigate = useNavigate();
   const [rooms, setRooms] = useState<Room[]>([]);
   const [filteredRooms, setFilteredRooms] = useState<Room[]>([]);
+  const [availableRooms, setAvailableRooms] = useState<Room[]>([]);
   const [filtersOpen, setFiltersOpen] = useState(false);
 
-  // user state for filters
   const [priceRange, setPriceRange] = useState(200000);
   const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
   const [checkIn, setCheckIn] = useState('');
   const [checkOut, setCheckOut] = useState('');
 
-  // Call API to fetch all rooms on component mount
+  // Fetch rooms
   useEffect(() => {
     fetch('/oceanview-backend/room')
       .then((res) => res.json())
@@ -31,29 +31,29 @@ export function RoomSearch() {
       .catch((err) => toast.error('Failed to fetch rooms: ' + err.message));
   }, []);
 
-  // price and type filters effect
+  // Apply filters
   useEffect(() => {
-    let result = rooms;
+    let baseRooms = availableRooms.length > 0 ? availableRooms : rooms;
 
-    // price filter
-    result = result.filter((room) => room.price <= priceRange);
+    let result = baseRooms.filter((room) => room.price <= priceRange);
 
-    // type filter
     if (selectedTypes.length > 0) {
       result = result.filter((room) => selectedTypes.includes(room.type));
     }
 
     setFilteredRooms(result);
-  }, [priceRange, selectedTypes, rooms]);
+  }, [priceRange, selectedTypes, rooms, availableRooms]);
 
-  //checkbox handler for room types
+  // Checkbox handler
   const handleTypeChange = (type: string) => {
     setSelectedTypes((prev) =>
-      prev.includes(type) ? prev.filter((t) => t !== type) : [...prev, type]
+      prev.includes(type)
+        ? prev.filter((t) => t !== type)
+        : [...prev, type]
     );
   };
 
-  // Availability check API call
+  // Check room availability
   const handleCheckAvailability = async () => {
     if (!checkIn || !checkOut) {
       toast.error('Please select check-in and check-out dates');
@@ -65,43 +65,49 @@ export function RoomSearch() {
         const res = await fetch(
           `/oceanview-backend/room/checkAvailability?roomId=${room.id}&checkIn=${checkIn}&checkOut=${checkOut}`
         );
+
         const data = await res.json();
-        return { ...room, available: data.available };
+
+        return {
+          ...room,
+          available: data.available,
+        };
       });
 
       const updatedRooms = await Promise.all(availabilityPromises);
 
-      // filter rooms based on availability and existing filters
-      const finalRooms = updatedRooms.filter(
-        (r) =>
-          r.available &&
-          r.price <= priceRange &&
-          (selectedTypes.length === 0 || selectedTypes.includes(r.type))
-      );
+      const available = updatedRooms.filter((r) => r.available);
 
-      setFilteredRooms(finalRooms);
+      setAvailableRooms(available);
+
+      if (available.length === 0) {
+        toast.info('No rooms available for selected dates');
+      }
+
     } catch (err: any) {
       toast.error('Error checking availability: ' + err.message);
     }
   };
 
-  // Navigation to room details page
+  // Navigate to room details
   const handleViewDetails = (room: Room) => {
     navigate(`/customer/rooms/${room.id}`);
   };
 
-  // Reset filters to default values
+  // Reset filters
   const resetFilters = () => {
     setPriceRange(200000);
     setSelectedTypes([]);
     setCheckIn('');
     setCheckOut('');
+    setAvailableRooms([]);
     setFilteredRooms(rooms);
   };
 
   return (
     <div className="min-h-screen bg-gray-50 py-12 animate-fade-in">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
         <div className="text-center mb-12">
           <h1 className="text-4xl font-serif font-bold text-ocean-deep mb-4">
             Find Your Perfect Stay
@@ -111,21 +117,24 @@ export function RoomSearch() {
           </p>
         </div>
 
-        {/* Search & Filters */}
+        {/* Search */}
         <div className="bg-white p-6 rounded-xl shadow-lg mb-12 -mt-6 border border-gray-100 max-w-5xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+
             <Input
               label="Check In"
               type="date"
               value={checkIn}
               onChange={(e) => setCheckIn(e.target.value)}
             />
+
             <Input
               label="Check Out"
               type="date"
               value={checkOut}
               onChange={(e) => setCheckOut(e.target.value)}
             />
+
             <Select
               label="Guests"
               options={[
@@ -135,6 +144,7 @@ export function RoomSearch() {
                 { value: '4', label: '4+ Guests' },
               ]}
             />
+
             <Button
               className="h-10"
               leftIcon={<Search className="h-4 w-4" />}
@@ -142,30 +152,41 @@ export function RoomSearch() {
             >
               Check Availability
             </Button>
+
           </div>
         </div>
 
         <div className="flex flex-col lg:flex-row gap-8">
-          {/* Filters Sidebar */}
+
+          {/* Filters */}
           <div
             className={`lg:w-64 flex-shrink-0 ${
               filtersOpen ? 'block' : 'hidden lg:block'
             }`}
           >
+
             <div className="bg-white p-6 rounded-xl border border-gray-200 sticky top-24">
+
               <div className="flex items-center justify-between mb-6">
                 <h3 className="font-serif font-bold text-lg">Filters</h3>
-                <Button variant="ghost" size="sm" className="text-xs" onClick={resetFilters}>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-xs"
+                  onClick={resetFilters}
+                >
                   Reset
                 </Button>
               </div>
 
               <div className="space-y-6">
-                {/* Price Range */}
+
+                {/* Price */}
                 <div>
                   <label className="text-sm font-medium text-gray-900 mb-3 block">
                     Max Price (LKR)
                   </label>
+
                   <input
                     type="range"
                     className="w-full accent-ocean-DEFAULT"
@@ -175,18 +196,21 @@ export function RoomSearch() {
                     value={priceRange}
                     onChange={(e) => setPriceRange(Number(e.target.value))}
                   />
+
                   <div className="flex justify-between text-xs text-gray-500 mt-2">
                     <span>10k</span>
                     <span>{priceRange.toLocaleString()}</span>
                   </div>
                 </div>
 
-                {/* Room Type */}
+                {/* Room Types */}
                 <div>
                   <label className="text-sm font-medium text-gray-900 mb-3 block">
                     Room Type
                   </label>
+
                   <div className="space-y-2">
+
                     {['Standard', 'Deluxe', 'Suite', 'Villa'].map((type) => (
                       <label
                         key={type}
@@ -201,16 +225,22 @@ export function RoomSearch() {
                         {type}
                       </label>
                     ))}
+
                   </div>
                 </div>
+
               </div>
             </div>
           </div>
 
-          {/* Room Grid */}
+          {/* Rooms */}
           <div className="flex-1">
+
             <div className="flex justify-between items-center mb-6">
-              <p className="text-gray-600">{filteredRooms.length} rooms found</p>
+              <p className="text-gray-600">
+                {filteredRooms.length} rooms found
+              </p>
+
               <Button
                 variant="outline"
                 size="sm"
@@ -223,6 +253,7 @@ export function RoomSearch() {
             </div>
 
             {filteredRooms.length > 0 ? (
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {filteredRooms.map((room) => (
                   <RoomCard
@@ -232,14 +263,24 @@ export function RoomSearch() {
                   />
                 ))}
               </div>
+
             ) : (
+
               <div className="text-center py-12 bg-white rounded-xl border border-gray-100">
-                <p className="text-gray-500">No rooms match your criteria.</p>
-                <Button variant="ghost" onClick={resetFilters}>
+                <p className="text-gray-500">
+                  No rooms match your criteria.
+                </p>
+
+                <Button
+                  variant="ghost"
+                  onClick={resetFilters}
+                >
                   Clear Filters
                 </Button>
               </div>
+
             )}
+
           </div>
         </div>
       </div>

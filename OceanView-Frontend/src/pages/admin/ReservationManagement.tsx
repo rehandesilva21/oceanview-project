@@ -219,27 +219,62 @@ export function ReservationManagement() {
       <Table data={filteredReservations} columns={columns} pagination totalPages={1} />
 
       {/* Detail Modal */}
-      <Modal
-        isOpen={isDetailModalOpen}
-        onClose={() => setIsDetailModalOpen(false)}
-        title="Reservation Details"
-        footer={<Button onClick={() => setIsDetailModalOpen(false)}>Close</Button>}
-      >
-        {selectedRes && (
-          <div className="space-y-4">
-            <div>
-              <p>ID: {selectedRes.id}</p>
-              <p>Guest: {selectedRes.guestName}</p>
-              <p>Room: {selectedRes.roomName}</p>
-              <p>
-                Dates: {selectedRes.checkIn} to {selectedRes.checkOut}
-              </p>
-              <p>Status: {selectedRes.status}</p>
-              <p>Amount: {formatCurrency(selectedRes.amount)}</p>
-            </div>
-          </div>
-        )}
-      </Modal>
+      {/* Detail Modal */}
+<Modal
+  isOpen={isDetailModalOpen}
+  onClose={() => setIsDetailModalOpen(false)}
+  title="Reservation Details"
+  footer={<Button onClick={() => setIsDetailModalOpen(false)}>Close</Button>}
+>
+  {selectedRes && (
+    <div className="space-y-4">
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <p className="text-sm text-gray-500">Reservation ID</p>
+          <p className="font-mono font-medium">{selectedRes.id}</p>
+        </div>
+        <div>
+          <p className="text-sm text-gray-500">Guest Name</p>
+          <p className="font-medium">{selectedRes.guestName}</p>
+        </div>
+        <div>
+          <p className="text-sm text-gray-500">Room Name</p>
+          <p className="font-medium">{selectedRes.roomName}</p>
+        </div>
+        <div>
+          <p className="text-sm text-gray-500">Status</p>
+          <Badge variant={
+            selectedRes.status === 'CONFIRMED' ? 'success' :
+            selectedRes.status === 'PENDING' ? 'warning' :
+            selectedRes.status === 'CANCELLED' ? 'error' : 'info'
+          }>
+            {selectedRes.status.replace('_', ' ')}
+          </Badge>
+        </div>
+        <div>
+          <p className="text-sm text-gray-500">Check-In</p>
+          <p className="font-medium">{format(new Date(selectedRes.checkIn), 'MMM d, yyyy')}</p>
+        </div>
+        <div>
+          <p className="text-sm text-gray-500">Check-Out</p>
+          <p className="font-medium">{format(new Date(selectedRes.checkOut), 'MMM d, yyyy')}</p>
+        </div>
+        <div>
+          <p className="text-sm text-gray-500">Amount</p>
+          <p className="font-medium">{formatCurrency(selectedRes.amount)}</p>
+        </div>
+        <div>
+          <p className="text-sm text-gray-500">Payment Status</p>
+          {selectedRes.paid ? (
+            <span className="text-green-700 font-medium">Paid ✅</span>
+          ) : (
+            <span className="text-red-600 font-medium">Not Paid ❌</span>
+          )}
+        </div>
+      </div>
+    </div>
+  )}
+</Modal>
 
       {/* Edit Modal */}
       <Modal
