@@ -25,7 +25,7 @@ public class RoomDAO {
                         rs.getDouble("price"),
                         rs.getBoolean("available"),
                         rs.getInt("max_guests"),
-                        rs.getString("type"), // ✅ new field
+                        rs.getString("type"),
                         rs.getString("image_url"),
                         rs.getString("description"),
                         rs.getString("amenities")

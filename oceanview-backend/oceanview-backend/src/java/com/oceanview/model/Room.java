@@ -14,7 +14,7 @@ public class Room {
     public Room() {}
 
     public Room(int id, String name, double price, boolean available, int maxGuests,
-                String type, String imageUrl, String description, String amenities) { // ✅ include type
+                String type, String imageUrl, String description, String amenities) { 
         this.id = id;
         this.name = name;
         this.price = price;
@@ -42,8 +42,8 @@ public class Room {
     public int getMaxGuests() { return maxGuests; }
     public void setMaxGuests(int maxGuests) { this.maxGuests = maxGuests; }
 
-    public String getType() { return type; } // ✅ new getter
-    public void setType(String type) { this.type = type; } // ✅ new setter
+    public String getType() { return type; } 
+    public void setType(String type) { this.type = type; } 
 
     public String getImageUrl() { return imageUrl; }
     public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }

@@ -27,6 +27,7 @@
             <file>file:/Volumes/AS1000%20Plus/OceanView_Project/oceanview-backend/oceanview-backend/web/META-INF/context.xml</file>
             <file>file:/Volumes/AS1000%20Plus/OceanView_Project/oceanview-backend/oceanview-backend/nbproject/project.properties</file>
             <file>file:/Volumes/AS1000%20Plus/OceanView_Project/oceanview-backend/oceanview-backend/nbproject/project.xml</file>
+            <file>file:/Volumes/AS1000%20Plus/OceanView_Project/oceanview-backend/oceanview-backend/test/com/oceanview/dao/RoomDAOTest.java</file>
         </group>
     </open-files>
 </project-private>
